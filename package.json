@@ -1,6 +1,6 @@
 {
   "name": "matches-shape",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A tool for testing whether an object is of a given shape",
   "author": "Sasha Klein",
   "repository": {
@@ -17,13 +17,12 @@
   },
   "scripts": {
     "test": "ava test --verbose",
-    "prepublish": "npm run compile",
-    "compile": "babel --presets es2015 -d dist/ src/"
+    "build": "npm run compile",
+    "compile": "babel --presets es2015 -d lib/ src/"
   },
   "ava": {
     "files": [
-      "test/**/*Test.js",
-      "!test/support/*"
+      "test/**/*Test.js"
     ],
     "require": [
       "babel-register"

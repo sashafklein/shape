@@ -5,110 +5,31 @@
 2 info using npm@3.9.3
 3 info using node@v6.2.1
 4 verbose publish [ '.' ]
-5 silly cache add args [ '.', null ]
-6 verbose cache add spec .
-7 silly cache add parsed spec Result {
-7 silly cache add   raw: '.',
-7 silly cache add   scope: null,
-7 silly cache add   name: null,
-7 silly cache add   rawSpec: '.',
-7 silly cache add   spec: '/Users/sasha/code/shape',
-7 silly cache add   type: 'directory' }
-8 verbose addLocalDirectory /Users/sasha/.npm/shape/1.0.0/package.tgz not in flight; packing
-9 verbose correctMkdir /Users/sasha/.npm correctMkdir not in flight; initializing
-10 info lifecycle shape@1.0.0~prepublish: shape@1.0.0
-11 silly lifecycle shape@1.0.0~prepublish: no script for prepublish, continuing
-12 verbose tar pack [ '/Users/sasha/.npm/shape/1.0.0/package.tgz',
-12 verbose tar pack   '/Users/sasha/code/shape' ]
-13 verbose tarball /Users/sasha/.npm/shape/1.0.0/package.tgz
-14 verbose folder /Users/sasha/code/shape
-15 verbose addLocalTarball adding from inside cache /Users/sasha/.npm/shape/1.0.0/package.tgz
-16 verbose correctMkdir /Users/sasha/.npm correctMkdir not in flight; initializing
-17 silly cache afterAdd shape@1.0.0
-18 verbose afterAdd /Users/sasha/.npm/shape/1.0.0/package/package.json not in flight; writing
-19 verbose correctMkdir /Users/sasha/.npm correctMkdir not in flight; initializing
-20 verbose afterAdd /Users/sasha/.npm/shape/1.0.0/package/package.json written
-21 silly publish { name: 'shape',
-21 silly publish   version: '1.0.0',
-21 silly publish   description: 'A tool for testing whether an object is of a given shape',
-21 silly publish   main: 'dist/Shape.js',
-21 silly publish   directories: { doc: 'docs' },
-21 silly publish   engines: { node: '6.2.x' },
-21 silly publish   scripts: { test: 'ava test --verbose' },
-21 silly publish   ava:
-21 silly publish    { files: [ 'test/**/*Test.js', '!test/support/*' ],
-21 silly publish      require: [ 'babel-register' ],
-21 silly publish      babel: 'inherit' },
-21 silly publish   author: { name: 'Sasha Klein' },
-21 silly publish   license: 'ISC',
-21 silly publish   dependencies:
-21 silly publish    { ava: '^0.15.2',
-21 silly publish      'babel-preset-es2015': '^6.9.0',
-21 silly publish      'babel-register': '^6.9.0',
-21 silly publish      gulp: 'github:gulpjs/gulp#4.0',
-21 silly publish      'gulp-babel': '^6.1.2',
-21 silly publish      lodash: '^4.13.1' },
-21 silly publish   readme: '# Shape\n\nA tool, modeled after React PropTypes declarations, for asserting the shape of any type of data. Originally designed for testing API responses, Shape provides a simple API for testing if data looks right, and accessing any failures:\n\n## Matches\n\nGiven a shape object (built using Shape\'s PropType like type functions), and some data, `shape.matches(data)` will return whether or not the two match:\n\n```\n * import Shape, { string, number, format, oneOf, regexes } from \'Shape\';\n * const shape = new Shape([{\n *   name: string,\n *   age: number,\n *   birthDate: format(regexes.iso8601)\n *   friends: [string],\n *   gender: oneOf([\'female\', \'male\'])\n * }]);\n * shape.matches([{\n *   name: \'John\',\n *   age: 4,\n *   birthDate: \'2012-04-03T06:25:18.234Z\'\n *   friends: [\'Sally\', \'Bob\'],\n *   gender: \'male\'\n * }])\n * // => true // It checks out!\n ```\n\n```\n * import Shape, { string, number, format, oneOf, regexes } from \'Shape\';\n * const shape = new Shape([{\n *   name: string,\n *   age: number,\n *   birthDate: format(regexes.iso8601)\n *   friends: [string],\n *   gender: oneOf([\'female\', \'male\'])\n * }]);\n * shape.matches([{\n *   name: \'John\',\n *   age: 4,\n *   birthDate: \'2012-04-03T06:25:18.234Z\'\n *   friends: [\'Sally\', \'Bob\'],\n *   gender: \'not-a-gender\'\n * }])\n * // => false // Gender is not among the acceptable options\n ```\n\n## Last Non Matches\n\nShape also provides a simple API (to be improved) for seeing what failed in the match:\n\n```\n * import Shape, { string, number, format, oneOf, regexes } from \'Shape\';\n * const shape = new Shape([{\n *   name: string,\n *   age: number,\n *   birthDate: format(regexes.iso8601)\n *   friends: [string],\n *   gender: oneOf([\'female\', \'male\'])\n * }]);\n * shape.matches([{\n *   name: \'John\',\n *   age: 4,\n *   birthDate: \'2012-04-03T06:25:18.234Z\'\n *   friends: [\'Sally\', \'Bob\'],\n *   gender: \'not-a-gender\'\n * }])\n * // => false\n * shape.lastNonMatches();\n * // => [\'"not-a-gender" is not within the specified array\']\n ```\n',
-21 silly publish   readmeFilename: 'README.md',
-21 silly publish   gitHead: '5497913291765a5613a58f312c996e8024cc5ace',
-21 silly publish   _id: 'shape@1.0.0',
-21 silly publish   _shasum: 'e3845ed7536770368c03c76322eb3d2f8549cc24',
-21 silly publish   _from: '.' }
-22 verbose getPublishConfig undefined
-23 silly mapToRegistry name shape
-24 silly mapToRegistry using default registry
-25 silly mapToRegistry registry https://registry.npmjs.org/
-26 silly mapToRegistry data Result {
-26 silly mapToRegistry   raw: 'shape',
-26 silly mapToRegistry   scope: null,
-26 silly mapToRegistry   name: 'shape',
-26 silly mapToRegistry   rawSpec: '',
-26 silly mapToRegistry   spec: 'latest',
-26 silly mapToRegistry   type: 'tag' }
-27 silly mapToRegistry uri https://registry.npmjs.org/shape
-28 verbose publish registryBase https://registry.npmjs.org/
-29 silly publish uploading /Users/sasha/.npm/shape/1.0.0/package.tgz
-30 verbose request uri https://registry.npmjs.org/shape
-31 verbose request sending authorization for write operation
-32 info attempt registry request try #1 at 11:27:10 AM
-33 verbose request using bearer token for auth
-34 verbose request id 9d3e2d1d954f8f28
-35 http request PUT https://registry.npmjs.org/shape
-36 http 403 https://registry.npmjs.org/shape
-37 verbose headers { 'content-type': 'application/json',
-37 verbose headers   'cache-control': 'max-age=300',
-37 verbose headers   'content-length': '99',
-37 verbose headers   'accept-ranges': 'bytes',
-37 verbose headers   date: 'Fri, 22 Jul 2016 18:27:10 GMT',
-37 verbose headers   via: '1.1 varnish',
-37 verbose headers   connection: 'keep-alive',
-37 verbose headers   'x-served-by': 'cache-sea1923-SEA',
-37 verbose headers   'x-cache': 'MISS',
-37 verbose headers   'x-cache-hits': '0',
-37 verbose headers   'x-timer': 'S1469212030.426622,VS0,VE169',
-37 verbose headers   vary: 'Accept-Encoding' }
-38 verbose request invalidating /Users/sasha/.npm/registry.npmjs.org/shape on PUT
-39 error publish Failed PUT 403
-40 verbose stack Error: you do not have permission to publish "shape". Are you logged in as the correct user? : shape
-40 verbose stack     at makeError (/Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
-40 verbose stack     at CachingRegistryClient.<anonymous> (/Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
-40 verbose stack     at Request._callback (/Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
-40 verbose stack     at Request.self.callback (/Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/request/request.js:200:22)
-40 verbose stack     at emitTwo (events.js:106:13)
-40 verbose stack     at Request.emit (events.js:191:7)
-40 verbose stack     at Request.<anonymous> (/Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/request/request.js:1067:10)
-40 verbose stack     at emitOne (events.js:101:20)
-40 verbose stack     at Request.emit (events.js:188:7)
-40 verbose stack     at IncomingMessage.<anonymous> (/Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/request/request.js:988:12)
-41 verbose statusCode 403
-42 verbose pkgid shape
-43 verbose cwd /Users/sasha/code/shape
-44 error Darwin 15.5.0
-45 error argv "/Users/sasha/.nvm/versions/node/v6.2.1/bin/node" "/Users/sasha/.nvm/versions/node/v6.2.1/bin/npm" "publish"
-46 error node v6.2.1
-47 error npm  v3.9.3
-48 error code E403
-49 error you do not have permission to publish "shape". Are you logged in as the correct user? : shape
-50 error If you need help, you may report this error at:
-50 error     <https://github.com/npm/npm/issues>
-51 verbose exit [ 1, true ]
+5 verbose stack Error: Failed to parse json
+5 verbose stack Trailing comma in object at 15:3
+5 verbose stack   },
+5 verbose stack   ^
+5 verbose stack     at parseError (/Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/read-package-json/read-json.js:390:11)
+5 verbose stack     at parseJson (/Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/read-package-json/read-json.js:79:23)
+5 verbose stack     at /Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/read-package-json/read-json.js:48:5
+5 verbose stack     at /Users/sasha/.nvm/versions/node/v6.2.1/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:78:16
+5 verbose stack     at tryToString (fs.js:449:3)
+5 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:436:12)
+6 verbose cwd /Users/sasha/code/shape
+7 error Darwin 15.5.0
+8 error argv "/Users/sasha/.nvm/versions/node/v6.2.1/bin/node" "/Users/sasha/.nvm/versions/node/v6.2.1/bin/npm" "publish"
+9 error node v6.2.1
+10 error npm  v3.9.3
+11 error file /Users/sasha/code/shape/package.json
+12 error code EJSONPARSE
+13 error Failed to parse json
+13 error Trailing comma in object at 15:3
+13 error   },
+13 error   ^
+14 error File: /Users/sasha/code/shape/package.json
+15 error Failed to parse package.json data.
+15 error package.json must be actual JSON, not just JavaScript.
+15 error
+15 error This is not a bug in npm.
+15 error Tell the package author to fix their package.json file. JSON.parse
+16 verbose exit [ 1, true ]

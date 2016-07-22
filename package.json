@@ -1,5 +1,5 @@
 {
-  "name": "shape",
+  "name": "matches-shape",
   "version": "1.0.0",
   "description": "A tool for testing whether an object is of a given shape",
   "main": "dist/Shape.js",

@@ -1,4 +1,4 @@
-# Shape
+# Shape Matcher
 
 A tool, modeled after React PropTypes declarations, for asserting the shape of any type of data. Originally designed for testing API responses, Shape provides a simple API for testing if data looks right, and accessing any failures:
 
@@ -7,7 +7,7 @@ A tool, modeled after React PropTypes declarations, for asserting the shape of a
 Given a shape object (built using Shape's PropType like type functions), and some data, `shape.matches(data)` will return whether or not the two match:
 
 ```
- * import Shape, { string, number, format, oneOf, regexes } from 'Shape';
+ * import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
  * const shape = new Shape([{
  *   name: string,
  *   age: number,
@@ -26,7 +26,7 @@ Given a shape object (built using Shape's PropType like type functions), and som
  ```
 
 ```
- * import Shape, { string, number, format, oneOf, regexes } from 'Shape';
+ * import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
  * const shape = new Shape([{
  *   name: string,
  *   age: number,
@@ -49,7 +49,7 @@ Given a shape object (built using Shape's PropType like type functions), and som
 Shape also provides a simple API (to be improved) for seeing what failed in the match:
 
 ```
- * import Shape, { string, number, format, oneOf, regexes } from 'Shape';
+ * import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
  * const shape = new Shape([{
  *   name: string,
  *   age: number,

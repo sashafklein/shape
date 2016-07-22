@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import parseFunc from '../support/parseFunction';
+import parseFunc from './support/parseFunction';
 
 export const oneOf = array => function oneOfInternal(comp) { return array.includes(comp); };
 export const format = regex => function formatInternal(comp) { return regex.test(comp); };

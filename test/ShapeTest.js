@@ -1,4 +1,4 @@
-import { describe, context } from '../support/describe';
+import { describe, context } from '../src/support/describe';
 
 import { Shape, oneOf, format, string, number, func, iso8601, regexes } from '../src/Shape';
 

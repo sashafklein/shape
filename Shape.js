@@ -1,26 +1,5 @@
 import _ from 'lodash';
 import parseFunc from './support/parseFunction';
-/**
- * *Asserts that an object is of given shape*
- * Example (for more, see test):
- * ```
- * import Shape, { string, number, format, oneOf, regexes } from 'Shape';
- * new Shape([{
- *   name: string,
- *   age: number,
- *   birthDate: format(regexes.iso8601)
- *   friends: [string],
- *   gender: oneOf(['female', 'male'])
- * }]).matches([{
- *   name: 'John',
- *   age: 4,
- *   birthDate: '2012-04-03T06:25:18.234Z'
- *   friends: ['Sally', 'Bob'],
- *   gender: 'male'
- * }])
- * => true // It checks out!
- * ```
-*/
 
 export const oneOf = array => function oneOfInternal(comp) { return array.includes(comp); };
 export const format = regex => function formatInternal(comp) { return regex.test(comp); };
@@ -41,11 +20,6 @@ class Shape {
     return this.previousNonMatchingMessages[this.previousNonMatchingMessages.length - 1];
   }
 
-  /**
-   * matches - test that the given object matches the shape passed in on construction
-   * @param  object [any value to be tested against the given shape]
-   * @return boolean [whether or not the object matches]
-   */
   matches(object) {
     this.recursivelyAccumulateNonMatches(object, this.shape);
     if (this.nonMatchingMessages.length) {
@@ -57,7 +31,9 @@ class Shape {
     return true;
   }
 
-  // PRIVATE
+  /////////////
+  // PRIVATE //
+  /////////////
 
   recursivelyAccumulateNonMatches(object, shape) {
     if (shape instanceof Array) {

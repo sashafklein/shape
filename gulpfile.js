@@ -6,5 +6,5 @@ gulp.task('default', function() {
     .pipe(babel({
       presets: ['es2015']
     }))
-    .pipe(gulp.dest('index.js'));
+    .pipe(gulp.dest('dist'));
 });

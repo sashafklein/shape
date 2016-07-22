@@ -2,7 +2,7 @@
   "name": "shape",
   "version": "1.0.0",
   "description": "A tool for testing whether an object is of a given shape",
-  "main": "index.js",
+  "main": "dist/Shape.js",
   "directories": {
     "doc": "docs"
   },

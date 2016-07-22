@@ -1,6 +1,6 @@
 import { describe, context } from '../support/describe';
 
-import Shape, { oneOf, format, string, number, func, iso8601, regexes } from '../src/Shape';
+import { Shape, oneOf, format, string, number, func, iso8601, regexes } from '../src/Shape';
 
 const flatAsserter = new Shape({
   name: string,

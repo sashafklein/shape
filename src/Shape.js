@@ -8,6 +8,8 @@ export const string = comp => typeof comp === 'string';
 export const number = comp => typeof comp === 'number';
 export const func = comp => typeof comp === 'function';
 export const boolean = comp => typeof comp === 'boolean';
+export const array = comp => comp instanceof Array;
+export const object = comp => !(comp instanceof Array) && typeof comp === 'object';
 
 class Shape {
   constructor(shape) {
@@ -53,7 +55,7 @@ class Shape {
     if (typeof object === 'object') {
       _.keys(shape).forEach(k => this.recursivelyAccumulateNonMatches(object[k], shape[k]));
     } else {
-      this.nonMatchingMessages.push(`${JSON.stringify(object)} is a ${typeof object}, not an object`);
+      this.nonMatchingMessages.push(`${JSON.stringify(object)} is ${this.articulate(typeof object)} ${typeof object}, not an object`);
     }
   }
 
@@ -61,7 +63,7 @@ class Shape {
     if (object instanceof Array) {
       object.forEach(child => this.recursivelyAccumulateNonMatches(child, shape[0]));
     } else {
-      this.nonMatchingMessages.push(`${JSON.stringify(object)} is a ${typeof object}, not an array`);
+      this.nonMatchingMessages.push(`${JSON.stringify(object)} is ${this.articulate(typeof object)} ${typeof object}, not an array`);
     }
   }
 
@@ -79,25 +81,41 @@ class Shape {
 
   string() {
     return comp => {
-      this.logFailure(string, comp, `"${comp}" is a ${typeof comp}, not a string`);
+      this.logFailure(string, comp, this.errorString(comp, 'string'));
     };
   }
 
   number() {
     return comp => {
-      this.logFailure(number, comp, `"${comp}" is a ${typeof comp}, not a number`);
+      this.logFailure(number, comp, this.errorString(comp, 'number'));
     };
   }
 
   func() {
     return comp => {
-      this.logFailure(func, comp, `"${comp}" is a ${typeof comp}, not a function`);
+      this.logFailure(func, comp, this.errorString(comp, 'function'));
     };
   }
 
   boolean() {
     return comp => {
-      this.logFailure(boolean, comp, `"${comp}" is a ${typeof comp}, not a boolean`);
+      this.logFailure(boolean, comp, this.errorString(comp, 'boolean'));
+    };
+  }
+
+  array() {
+    return comp => {
+      this.logFailure(array, comp, this.errorString(comp, 'array'));
+    };
+  }
+
+  object() {
+    return comp => {
+      if (comp instanceof Array) {
+        this.logFailure(object, comp, this.errorString(comp, 'object', 'array'));
+      } else {
+        this.logFailure(object, comp, this.errorString(comp, 'object'));
+      }
     };
   }
 
@@ -105,6 +123,17 @@ class Shape {
     if (!testFunc(comp)) {
       this.nonMatchingMessages.push(errorMsg);
     }
+  }
+
+  articulate(string) {
+    const vowels = ['a', 'e', 'i', 'o', 'u'];
+    return vowels.includes(string[0]) ? 'an' : 'a'
+  }
+
+  errorString(comp, target, givenType=null) {
+    const type = givenType || typeof comp;
+
+    return `${JSON.stringify(comp)} is ${this.articulate(type)} ${type}, not ${this.articulate(target)} ${target}`;
   }
 }
 

@@ -1,6 +1,6 @@
 import { describe, context } from '../src/support/describe';
 
-import Shape, { oneOf, format, string, number, func, iso8601, regexes } from '../src/Shape';
+import Shape, { oneOf, format, string, number, func, regexes, object, array } from '../src/Shape';
 
 const flatAsserter = new Shape({
   name: string,
@@ -95,7 +95,7 @@ describe('object shape', [
 
     ['accurate negatives', t => {
       t.false(flatAsserter.matches(flatObj({ name: 5 })));
-      assertFailures(t, flatAsserter, ['"5" is a number, not a string']);
+      assertFailures(t, flatAsserter, ['5 is a number, not a string']);
       t.false(flatAsserter.matches(flatObj({ age: 'Five' })));
       assertFailures(t, flatAsserter, ['"Five" is a string, not a number']);
       t.false(flatAsserter.matches(flatObj({ incrementAge: 'Another string' })));
@@ -133,11 +133,11 @@ describe('object shape', [
 
     ['accurate negatives', t => {
       t.false(deepObjectAsserter.matches(deepObj({ name: 5 })));
-      assertFailures(t, deepObjectAsserter, ['"5" is a number, not a string']);
+      assertFailures(t, deepObjectAsserter, ['5 is a number, not a string']);
       t.false(deepObjectAsserter.matches(deepObj({ friends: 'Sally' })));
       assertFailures(t, deepObjectAsserter, ['"Sally" is a string, not an array']);
       t.false(deepObjectAsserter.matches(deepObj({ details: { eyeColor: 'brown' } }))); // Missing height
-      assertFailures(t, deepObjectAsserter, ['"undefined" is a undefined, not a string']);
+      assertFailures(t, deepObjectAsserter, ['undefined is an undefined, not a string']);
     }],
 
     ['with oneOf specified', t => {
@@ -165,7 +165,7 @@ describe('array', [
     ['without children', t => {
       t.true(arrayAsserter.matches([]));
       t.false(arrayAsserter.matches({}));
-      assertFailures(t, arrayAsserter, ['{} is a object, not an array']);
+      assertFailures(t, arrayAsserter, ['{} is an object, not an array']);
     }],
 
     ['with iso format event data', t => {
@@ -187,4 +187,44 @@ describe('array', [
       assertFailures(t, asserter, ['"2016-07-09" does not match given regex']);
     }]
   ])
+]);
+
+describe('readme example', [
+  ['spits out useful errors', t => {
+    const shape = new Shape([{
+      name: string,
+      age: number,
+      birthDate: format(regexes.iso8601),
+      friends: [string],
+      gender: oneOf(['female', 'male'])
+    }]);
+    t.false(shape.matches([{
+      name: 'John',
+      age: 4,
+      birthDate: '2012-04-03T06:25:18.234Z',
+      friends: ['Sally', 4],
+      gender: 'not-a-gender'
+    }]));
+    t.deepEqual(
+      shape.lastNonMatches(),
+      ['4 is a number, not a string', '"not-a-gender" is not within the specified array']
+    );
+  }]
+]);
+
+describe('array and object matchers', [
+  ['work and are ambivalent to object contents', t => {
+    const shape = new Shape({
+      arrayVal: array,
+      objectVal: object
+    });
+
+    t.true(shape.matches({ arrayVal: [1, 2, 3], objectVal: { one: 'two' } }));
+    t.true(shape.matches({ arrayVal: [1, 'two', 3], objectVal: {  } }));
+    t.false(shape.matches({ arrayVal: {}, objectVal: [] }));
+    t.deepEqual(
+      shape.lastNonMatches(),
+      ["{} is an object, not an array","[] is an array, not an object"]
+    );
+  }]
 ]);

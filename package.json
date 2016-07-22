@@ -1,6 +1,6 @@
 {
   "name": "matches-shape",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "A tool for testing whether an object is of a given shape",
   "author": "Sasha Klein",
   "repository": {

@@ -112,13 +112,4 @@ export const regexes = {
   iso8601: /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[A-Z]{1}/
 };
 
-module.exports = {
-  Shape,
-  regexes,
-  oneOf,
-  format,
-  string,
-  number,
-  func,
-  boolean
-};
+export default Shape;

@@ -1,15 +1,19 @@
 import _ from 'lodash';
 import parseFunc from './support/parseFunction';
 
+const type = comp => (comp instanceof Array) ? 'array' : typeof comp;
+
 export const oneOf = array => function oneOfInternal(comp) { return array.includes(comp); };
 export const format = regex => function formatInternal(comp) { return regex.test(comp); };
+export const oneOfType = types => function oneOfTypeInternal(comp) { return types.filter(typeFunc => typeFunc(comp)).length !== 0; }
 
 export const string = comp => typeof comp === 'string';
 export const number = comp => typeof comp === 'number';
 export const func = comp => typeof comp === 'function';
 export const boolean = comp => typeof comp === 'boolean';
-export const array = comp => comp instanceof Array;
-export const object = comp => !(comp instanceof Array) && typeof comp === 'object';
+export const array = comp => type(comp) === 'array';
+export const object = comp => type(comp) === 'object';
+
 
 class Shape {
   constructor(shape) {
@@ -40,9 +44,9 @@ class Shape {
   recursivelyAccumulateNonMatches(object, shape) {
     if (shape instanceof Array) {
       this.testArrayMatch(shape, object);
-    } else if (typeof shape === 'object') {
+    } else if (type(shape) === 'object') {
       this.testObjectMatch(shape, object);
-    } else if (typeof shape === 'function') {
+    } else if (type(shape) === 'function') {
       const funcName = parseFunc(shape).name.replace('_', '').replace('Internal', '');
       const logAndTestFunction = this[funcName](shape);
       logAndTestFunction(object);
@@ -68,9 +72,15 @@ class Shape {
   }
 
   oneOf(testFunc) {
-    return (comp) => {
+    return comp => {
       this.logFailure(testFunc, comp, `"${comp}" is not within the specified array`);
     };
+  }
+
+  oneOfType(testFunc) {
+    return comp => {
+      this.logFailure(testFunc, comp, `${JSON.stringify(comp)} is ${this.articulate(type(comp))} ${type(comp)}, which is not among the specified types`);
+    }
   }
 
   format(testFunc) {
@@ -111,11 +121,7 @@ class Shape {
 
   object() {
     return comp => {
-      if (comp instanceof Array) {
-        this.logFailure(object, comp, this.errorString(comp, 'object', 'array'));
-      } else {
-        this.logFailure(object, comp, this.errorString(comp, 'object'));
-      }
+      this.logFailure(object, comp, this.errorString(comp, 'object', type(comp)));
     };
   }
 

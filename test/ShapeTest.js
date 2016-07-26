@@ -1,6 +1,6 @@
 import { describe, context } from '../src/support/describe';
 
-import Shape, { oneOf, format, string, number, func, regexes, object, array } from '../src/Shape';
+import Shape, { oneOf, format, string, number, func, regexes, object, array, oneOfType } from '../src/Shape';
 
 const flatAsserter = new Shape({
   name: string,
@@ -121,7 +121,20 @@ describe('object shape', [
       t.true(asserter.matches({ email: 'fake@email.com' }));
       t.false(asserter.matches({ email: 'fakeemail.com' }));
       assertFailures(t, asserter, ['"fakeemail.com" does not match given regex']);
-    }]
+    }],
+
+    ['with oneOfType specified', t => {
+      const asserter = new Shape({
+        random: oneOfType([string, number])
+      });
+
+      t.true(asserter.matches({ random: 'I am a string' }));
+      t.true(asserter.matches({ random: 1234.1234 }));
+      t.false(asserter.matches({ random: [] }));
+      assertFailures(t, asserter, ['[] is an array, which is not among the specified types']);
+      t.false(asserter.matches({ random: {} }));
+      assertFailures(t, asserter, ['{} is an object, which is not among the specified types']);
+    }],
   ]),
 
   context('deep children', [

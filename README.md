@@ -1,6 +1,10 @@
 # Shape Matcher
 
-A lightweight tool, modeled after React PropTypes declarations, for asserting the shape of any type of data. Originally designed for testing API responses, Shape provides a simple interface for testing if data looks right, and accessing any failures:
+A lightweight tool, modeled after React PropTypes declarations, for asserting the shape of any type of data. Originally designed for testing API responses, Shape provides a simple interface for testing if data looks right, and accessing any failures.
+
+[![CircleCI](https://circleci.com/gh/sashafklein/shape.svg?style=svg&circle-token=cde994ece9d01489331c05301ebbff918bebcd7c)](https://circleci.com/gh/sashafklein/shape)
+
+# Methods
 
 ## Matches
 

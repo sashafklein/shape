@@ -53,24 +53,26 @@ Failing case:
 Shape also provides a simple API (to be improved) for seeing what failed in the match:
 
 ```
- * import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
+ * import Shape, { string, number, format, oneOf, oneOfType, regexes } from 'matches-shape';
  * const shape = new Shape([{
  *   name: string,
  *   age: number,
  *   birthDate: format(regexes.iso8601)
  *   friends: [string],
- *   gender: oneOf(['female', 'male'])
+ *   gender: oneOf(['female', 'male']),
+ *   random: oneOfType([number, string])
  * }]);
  * shape.matches([{
  *   name: 'John',
  *   age: 4,
  *   birthDate: '2012-04-03'
  *   friends: ['Sally', 5],
- *   gender: 'not-a-gender'
+ *   gender: 'not-a-gender',
+ *   random: {}
  * }])
  * // => false
  * shape.lastNonMatches();
- * // => ['"5" is a number, not a string', '"2012-04-03" does not match given regex', '"not-a-gender" is not within the specified array']
+ * // => ['"5" is a number, not a string', '"2012-04-03" does not match given regex', '"not-a-gender" is not within the specified array', '{} is an object, which is not among the specified types']
 ```
 
 ## Matching options
@@ -85,6 +87,7 @@ The following matchers can be imported destructured from `matches-shape`.
 - `array` - Asserts that the value is an array. Only to be used if you are ambivalent about the values within the array.
 - `format(regex)` - Asserts that the value matches the given regex.
 - `oneOf([])` - Asserts that the value is within the specified options.
+- `oneOfType([])` - Asserts that the value is one of the specified types.
 
 Apart from these matchers, object shape is indicated by the shape object itself. In other words, the following shape object will assert that the object tested contains, under a "values" key, an array of objects with string values for their "type" key:
 
@@ -102,3 +105,8 @@ One additional import is provided - `regexes` - which defines a handful of usefu
 new Shape(format(regexes.iso8601)).matches('Some string')
 # => false
 ```
+
+### TODO
+
+- Improve error logging, so that errors point to particular nodes
+- Add a handful of basic regexes

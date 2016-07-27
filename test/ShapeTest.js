@@ -1,6 +1,6 @@
 import { describe, context } from '../src/support/describe';
 
-import Shape, { oneOf, format, string, number, func, regexes, object, array, oneOfType } from '../src/Shape';
+import Shape, { oneOf, format, string, number, func, regexes, object, array, oneOfType, undef, nul } from '../src/Shape';
 
 const flatAsserter = new Shape({
   name: string,
@@ -238,6 +238,37 @@ describe('array and object matchers', [
     t.deepEqual(
       shape.lastNonMatches(),
       ["{} is an object, not an array","[] is an array, not an object"]
+    );
+  }]
+]);
+
+describe('handling optional attributes', [
+  ['oneOfType and undefined work together', t => {
+    const shape = new Shape({
+      optionalNumber: oneOfType([number, undef]),
+      mandatoryNumber: number,
+      nullButNotUndefinedField: nul
+    });
+
+    t.true(shape.matches({ optionalNumber: 1, mandatoryNumber: 1, nullButNotUndefinedField: null }));
+    t.true(shape.matches({ mandatoryNumber: 1, nullButNotUndefinedField: null }));
+
+    t.false(shape.matches({ nullButNotUndefinedField: null }));
+    t.deepEqual(
+      shape.lastNonMatches(),
+      ['undefined is an undefined, not a number']
+    );
+
+    t.false(shape.matches({ mandatoryNumber: 1 }));
+    t.deepEqual(
+      shape.lastNonMatches(),
+      ['undefined is an undefined, not a null']
+    );
+
+    t.false(shape.matches({ optionalNumber: null, mandatoryNumber: 1, nullButNotUndefinedField: null }));
+    t.deepEqual(
+      shape.lastNonMatches(),
+      ['null is a null, which is not among the specified types']
     );
   }]
 ]);

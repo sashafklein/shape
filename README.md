@@ -87,6 +87,8 @@ The following matchers can be imported destructured from `matches-shape`.
 - `number` - Asserts that the value is of type number.
 - `function` - Asserts that the value is of type function.
 - `boolean` - Asserts that the value is of type boolean.
+- `nul` - Asserts that the value is null (a protected word, thus the weird spelling).
+- `undef` - Asserts that the value is of type undefined (a protected word, thus the weird spelling).
 - `object` - Asserts that the value is of type object (and NOT an array). Only to be used if you are ambivalent about the values within the object.
 - `array` - Asserts that the value is an array. Only to be used if you are ambivalent about the values within the array.
 - `format(regex)` - Asserts that the value matches the given regex.
@@ -108,6 +110,20 @@ One additional import is provided - `regexes` - which defines a handful of usefu
 ```
 new Shape(format(regexes.iso8601)).matches('Some string')
 # => false
+```
+
+## Optional attributes
+
+Sometimes you want to test that *if* an attribute exists, it is of a certain type -- but it doesn't need to exist. Rather than using a complex syntax for optional attributes, you can use `oneOfType([])`:
+
+```
+import Shape, { undef, number, oneOfType } from 'matches-shape';
+
+const shape = new Shape({ optionalNumber: oneOfType([number, undef]) });
+shape.matches({ optionalNumber: 1 }) // => true
+shape.matches({}) // => true
+shape.matches({ optionalNumber: null }) // => false
+shape.matches({ optionalNumber: '1' }) // => false
 ```
 
 ### TODO

@@ -1,19 +1,27 @@
 import _ from 'lodash';
 import parseFunc from './support/parseFunction';
 
-const type = comp => (comp instanceof Array) ? 'array' : typeof comp;
+const type = comp => {
+  if (comp instanceof Array) {
+    return 'array';
+  } else if (comp === null) {
+    return 'null';
+  }
+  return typeof comp;
+};
 
 export const oneOf = array => function oneOfInternal(comp) { return array.includes(comp); };
 export const format = regex => function formatInternal(comp) { return regex.test(comp); };
 export const oneOfType = types => function oneOfTypeInternal(comp) { return types.filter(typeFunc => typeFunc(comp)).length !== 0; }
 
-export const string = comp => typeof comp === 'string';
-export const number = comp => typeof comp === 'number';
-export const func = comp => typeof comp === 'function';
-export const boolean = comp => typeof comp === 'boolean';
+export const string = comp => type(comp) === 'string';
+export const number = comp => type(comp) === 'number';
+export const func = comp => type(comp) === 'function';
+export const boolean = comp => type(comp) === 'boolean';
 export const array = comp => type(comp) === 'array';
 export const object = comp => type(comp) === 'object';
-
+export const undef = comp => type(comp) === 'undefined';
+export const nul = comp => type(comp) === 'null';
 
 class Shape {
   constructor(shape) {
@@ -110,6 +118,18 @@ class Shape {
   boolean() {
     return comp => {
       this.logFailure(boolean, comp, this.errorString(comp, 'boolean'));
+    };
+  }
+
+  undef() {
+    return comp => {
+      this.logFailure(undef, comp, this.errorString(comp, 'undefined'));
+    };
+  }
+
+  nul() {
+    return comp => {
+      this.logFailure(nul, comp, this.errorString(comp, 'null'));
     };
   }
 

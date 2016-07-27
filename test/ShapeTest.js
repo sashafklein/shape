@@ -272,3 +272,71 @@ describe('handling optional attributes', [
     );
   }]
 ]);
+
+describe('printableShape', [
+  ['with object', t => {
+    const shape = new Shape({
+      value: {
+        anotherObject: {
+          numberArray: [number],
+          someValue: string,
+          thisOneIsNull: nul,
+          thisOneIsUndefined: undef,
+          thisIsAFunction: func,
+          thisIsFormatted: format(regexes.iso8601)
+        }
+      }
+    });
+
+    t.deepEqual(
+      shape.printableShape,
+      {
+        "value": {
+          "anotherObject": {
+            "numberArray": [
+              "number"
+            ],
+            "someValue": "string",
+            "thisOneIsNull": "null",
+            "thisOneIsUndefined": "undefined",
+            "thisIsAFunction": "function",
+            "thisIsFormatted": "format"
+          }
+        }
+      }
+    );
+  }],
+
+  ['with array', t => {
+    const shape = new Shape([{
+      value: {
+        anotherObject: {
+          numberArray: [number],
+          someValue: string,
+          thisOneIsNull: nul,
+          thisOneIsUndefined: undef,
+          thisIsAFunction: func,
+          thisIsFormatted: format(regexes.iso8601)
+        }
+      }
+    }]);
+
+    t.deepEqual(
+      shape.printableShape,
+      [{
+        "value": {
+          "anotherObject": {
+            "numberArray": [
+              "number"
+            ],
+            "someValue": "string",
+            "thisOneIsNull": "null",
+            "thisOneIsUndefined": "undefined",
+            "thisIsAFunction": "function",
+            "thisIsFormatted": "format"
+          }
+        }
+      }]
+    );
+  }],
+]);

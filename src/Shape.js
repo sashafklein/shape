@@ -10,6 +10,8 @@ const type = comp => {
   return typeof comp;
 };
 
+const functionName = (f) => parseFunc(f).name.replace('_', '').replace('Internal', '');
+
 export const oneOf = array => function oneOfInternal(comp) { return array.includes(comp); };
 export const format = regex => function formatInternal(comp) { return regex.test(comp); };
 export const oneOfType = types => function oneOfTypeInternal(comp) { return types.filter(typeFunc => typeFunc(comp)).length !== 0; }
@@ -26,6 +28,8 @@ export const nul = comp => type(comp) === 'null';
 class Shape {
   constructor(shape) {
     this.shape = shape;
+    this.printableShapeObject = type(shape) === 'array' ? [] : {};
+    this.printableShape = this.calculatePrintableShape(shape);
     this.nonMatchingMessages = [];
     this.previousNonMatchingMessages = [];
   }
@@ -55,7 +59,7 @@ class Shape {
     } else if (type(shape) === 'object') {
       this.testObjectMatch(shape, object);
     } else if (type(shape) === 'function') {
-      const funcName = parseFunc(shape).name.replace('_', '').replace('Internal', '');
+      const funcName = functionName(shape);
       const logAndTestFunction = this[funcName](shape);
       logAndTestFunction(object);
     }
@@ -160,6 +164,16 @@ class Shape {
     const type = givenType || typeof comp;
 
     return `${JSON.stringify(comp)} is ${this.articulate(type)} ${type}, not ${this.articulate(target)} ${target}`;
+  }
+
+  calculatePrintableShape(shape, startingObject=null) {
+    const replaceValues = (k, value) => (typeof value === 'function') ? functionName(value) : value;
+    const objectString = JSON.stringify(shape, replaceValues)
+      .replace(/"nul"/g, '"null"')
+      .replace(/"undef"/g, '"undefined"')
+      .replace(/"func"/g, '"function"');
+
+    return JSON.parse(objectString);
   }
 }
 

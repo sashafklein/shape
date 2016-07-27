@@ -126,6 +126,49 @@ shape.matches({ optionalNumber: null }) // => false
 shape.matches({ optionalNumber: '1' }) // => false
 ```
 
+## Printable Shape
+
+Shape objects come with a `printableShape` attribute, which returns a version of the given shape with the expected values represented as type strings:
+
+```
+const shape = new Shape([{
+  value: {
+    anotherObject: {
+      numberArray: [number],
+      someValue: string,
+      thisOneIsNull: nul,
+      thisOneIsUndefined: undef,
+      thisIsAFunction: func,
+      thisIsFormatted: format(regexes.iso8601)
+    }
+  }
+}]);
+
+shape.printableShape
+// Returns the below object
+// [{
+//   "value": {
+//     "anotherObject": {
+//       "numberArray": [
+//         "number"
+//       ],
+//       "someValue": "string",
+//       "thisOneIsNull": "null",
+//       "thisOneIsUndefined": "undefined",
+//       "thisIsAFunction": "function",
+//       "thisIsFormatted": "format"
+//     }
+//   }
+// }]
+```
+
+To pretty print a `printableShape`, just use JSON.stringify:
+
+```
+// The third argument specifies how many spaces to indent per nesting level
+JSON.stringify(shape, null, 2);
+```
+
 ### TODO
 
 - Improve error logging, so that errors point to particular nodes

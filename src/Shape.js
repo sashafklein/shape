@@ -24,6 +24,7 @@ export const array = comp => type(comp) === 'array';
 export const object = comp => type(comp) === 'object';
 export const undef = comp => type(comp) === 'undefined';
 export const nul = comp => type(comp) === 'null';
+export const opt = matcher => oneOfType([matcher, undef])
 
 class Shape {
   constructor(shape) {

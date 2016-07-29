@@ -1,6 +1,6 @@
 import { describe, context } from '../src/support/describe';
 
-import Shape, { oneOf, format, string, number, func, regexes, object, array, oneOfType, undef, nul } from '../src/Shape';
+import Shape, { oneOf, format, string, number, func, regexes, object, array, oneOfType, undef, nul, opt } from '../src/Shape';
 
 const flatAsserter = new Shape({
   name: string,
@@ -339,4 +339,22 @@ describe('printableShape', [
       }]
     );
   }],
+]);
+
+describe('opt', [
+  ['declares a value to match a condition optionally', t => {
+    const shape = new Shape({ someKey: opt(string) });
+    t.true(
+      shape.matches({ someKey: 'ImAString' })
+    );
+    t.true(
+      shape.matches({ })
+    );
+    t.false(
+      shape.matches({ someKey: null })
+    );
+    t.false(
+      shape.matches({ someKey: number })
+    );
+  }]
 ]);

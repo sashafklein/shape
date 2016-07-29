@@ -114,12 +114,14 @@ new Shape(format(regexes.iso8601)).matches('Some string')
 
 ## Optional attributes
 
-Sometimes you want to test that *if* an attribute exists, it is of a certain type -- but it doesn't need to exist. Rather than using a complex syntax for optional attributes, you can use `oneOfType([])`:
+Sometimes you want to test that *if* an attribute exists, it is of a certain type -- but it doesn't need to exist. There are two options to achieve this. Either use the `opt(matcher)` function (ie `{ someKey: opt(string) }`, or use`oneOfType([])`, with `undef` as one of the options:
 
 ```
 import Shape, { undef, number, oneOfType } from 'matches-shape';
 
-const shape = new Shape({ optionalNumber: oneOfType([number, undef]) });
+const shape  = new Shape({ optionalNumber: oneOfType([number, undef]) });
+// Equivalent: new Shape({ optionalNumber: opt(number) });
+
 shape.matches({ optionalNumber: 1 }) // => true
 shape.matches({}) // => true
 shape.matches({ optionalNumber: null }) // => false

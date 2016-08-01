@@ -1,4 +1,4 @@
-import { describe, context } from '../src/support/describe';
+import { describe } from 'ava-describe';
 
 import Shape, { oneOf, format, string, number, func, regexes, object, array, oneOfType, undef, nul, opt } from '../src/Shape';
 
@@ -55,54 +55,37 @@ const assertFailures = (t, asserter, failures) => {
   t.deepEqual(asserter.lastNonMatches(), failures);
 };
 
-describe('non-object shape', [
-  ['simple strings', t => {
-    t.true(new Shape(string).matches('I am a string'));
-    t.false(new Shape(string).matches(4));
-  }],
+const testFlat = (matcher, good, bad) => t => {
+  const shape = new Shape(matcher);
+  t.true(shape.matches(good));
+  t.false(shape.matches(bad));
+}
 
-  ['formatted strings', t => {
-    t.true(new Shape(format(/.+@.+.com/)).matches('whatever@whatever.com'));
-    t.false(new Shape(format(/.+@.+.com/)).matches('whatever@whatever.org'));
-  }],
+describe('non-object shape', {
+  simpleStrings: testFlat(string, 'I am a string', 4),
+  formattedStrings: testFlat(format(/.+@.+.com/), 'whatever@whatever.com', 'whatever@whatever.org'),
+  isoStrings: testFlat(format(regexes.iso8601), '2016-07-08T17:51:44.261Z', '2016-07-08'),
+  specifiedStrings: testFlat(oneOf(['first', 'second', 'third']), 'second', 'fourth'),
+  numbers: testFlat(number, 4, '4'),
+  functions: testFlat(func, () => null, 'function')
+});
 
-  ['iso strings', t => {
-    t.true(new Shape(format(regexes.iso8601)).matches('2016-07-08T17:51:44.261Z'));
-    t.false(new Shape(format(regexes.iso8601)).matches('2016-07-08'));
-  }],
-
-  ['specified strings', t => {
-    t.true(new Shape(oneOf(['first', 'second', 'third'])).matches('second'));
-    t.false(new Shape(oneOf(['first', 'second', 'third'])).matches('fourth'));
-  }],
-
-  ['numbers', t => {
-    t.true(new Shape(number).matches(4));
-    t.false(new Shape(number).matches('4'));
-  }],
-
-  ['functions', t => {
-    t.true(new Shape(func).matches(() => null));
-    t.false(new Shape(func).matches('function'));
-  }]
-]);
-
-describe('object shape', [
-  context('flat children', [
-    ['accurate positives', t => {
+describe('object shape', {
+  flatChildren: {
+    accuratePositives: t => {
       t.true(flatAsserter.matches(flatObj()));
-    }],
+    },
 
-    ['accurate negatives', t => {
+    accurateNegatives: t => {
       t.false(flatAsserter.matches(flatObj({ name: 5 })));
       assertFailures(t, flatAsserter, ['5 is a number, not a string']);
       t.false(flatAsserter.matches(flatObj({ age: 'Five' })));
       assertFailures(t, flatAsserter, ['"Five" is a string, not a number']);
       t.false(flatAsserter.matches(flatObj({ incrementAge: 'Another string' })));
       assertFailures(t, flatAsserter, ['"Another string" is a string, not a function']);
-    }],
+    },
 
-    ['with oneOf specified', t => {
+    withOneOfSpecified: t => {
       const asserter = new Shape({
         eyeColor: oneOf(['blue', 'green'])
       });
@@ -111,9 +94,9 @@ describe('object shape', [
       t.true(asserter.matches({ eyeColor: 'green' }));
       t.false(asserter.matches({ eyeColor: 'purple' }));
       assertFailures(t, asserter, ['"purple" is not within the specified array']);
-    }],
+    },
 
-    ['with format specified', t => {
+    withFormatSpecified: t => {
       const asserter = new Shape({
         email: format(/(.+)@(.+){2,}.(.+){2,}/g)
       });
@@ -121,9 +104,9 @@ describe('object shape', [
       t.true(asserter.matches({ email: 'fake@email.com' }));
       t.false(asserter.matches({ email: 'fakeemail.com' }));
       assertFailures(t, asserter, ['"fakeemail.com" does not match given regex']);
-    }],
+    },
 
-    ['with oneOfType specified', t => {
+    withOneOfTypeSpecified: t => {
       const asserter = new Shape({
         random: oneOfType([string, number])
       });
@@ -134,54 +117,54 @@ describe('object shape', [
       assertFailures(t, asserter, ['[] is an array, which is not among the specified types']);
       t.false(asserter.matches({ random: {} }));
       assertFailures(t, asserter, ['{} is an object, which is not among the specified types']);
-    }],
-  ]),
+    },
+  },
 
-  context('deep children', [
-    ['accurate positives', t => {
+  deepChildren: {
+    accuratePositives: t => {
       t.true(deepObjectAsserter.matches(deepObj()));
       t.true(deepObjectAsserter.matches(deepObj({ friends: [] })));
       t.true(deepObjectAsserter.matches(deepObj({ details: { eyeColor: 'blue', height: 'not relevant' } })));
-    }],
+    },
 
-    ['accurate negatives', t => {
+    accurateNegatives: t => {
       t.false(deepObjectAsserter.matches(deepObj({ name: 5 })));
       assertFailures(t, deepObjectAsserter, ['5 is a number, not a string']);
       t.false(deepObjectAsserter.matches(deepObj({ friends: 'Sally' })));
       assertFailures(t, deepObjectAsserter, ['"Sally" is a string, not an array']);
       t.false(deepObjectAsserter.matches(deepObj({ details: { eyeColor: 'brown' } }))); // Missing height
       assertFailures(t, deepObjectAsserter, ['undefined is an undefined, not a string']);
-    }],
+    },
 
-    ['with oneOf specified', t => {
+    withOneOfSpecified: t => {
       const asserter = new Shape({
         details: { eyeColor: oneOf(['blue', 'green']) }
       });
       t.true(asserter.matches({ details: { eyeColor: 'blue' } }));
       t.false(asserter.matches({ details: { eyeColor: 'purple' } }));
       assertFailures(t, asserter, ['"purple" is not within the specified array']);
-    }]
-  ])
-]);
+    }
+  }
+});
 
-describe('array', [
-  context('object children', [
-    ['with children', t => {
+describe('array', {
+  objectChildren: {
+    withChildren: t => {
       t.true(arrayAsserter.matches(arrayObj));
       t.false(arrayAsserter.matches([{ other: 'stuff' }]));
-    }],
+    },
 
-    ['with children one of which doesn\'t match', t => {
+    withChildrenOneOfWhichDoesNotMatch: t => {
       t.false(arrayAsserter.matches(arrayObj.concat({ other: 'stuff' })));
-    }],
+    },
 
-    ['without children', t => {
+    withoutChildren: t => {
       t.true(arrayAsserter.matches([]));
       t.false(arrayAsserter.matches({}));
       assertFailures(t, arrayAsserter, ['{} is an object, not an array']);
-    }],
+    },
 
-    ['with iso format event data', t => {
+    withIsoFormatData: t => {
       const data = [{
         type: 'Some Type',
         startTime: '2016-07-08T17:51:44.261Z',
@@ -198,12 +181,12 @@ describe('array', [
       data[0] = Object.assign({}, data[0], { endTime: '2016-07-09' });
       t.false(asserter.matches(data));
       assertFailures(t, asserter, ['"2016-07-09" does not match given regex']);
-    }]
-  ])
-]);
+    }
+  }
+});
 
-describe('readme example', [
-  ['spits out useful errors', t => {
+describe('readme example', {
+  spitsOutUsefulErrors: t => {
     const shape = new Shape([{
       name: string,
       age: number,
@@ -222,11 +205,11 @@ describe('readme example', [
       shape.lastNonMatches(),
       ['4 is a number, not a string', '"not-a-gender" is not within the specified array']
     );
-  }]
-]);
+  }
+});
 
-describe('array and object matchers', [
-  ['work and are ambivalent to object contents', t => {
+describe('array and object matchers', {
+  areAmbivalentToObjectContents: t => {
     const shape = new Shape({
       arrayVal: array,
       objectVal: object
@@ -239,11 +222,11 @@ describe('array and object matchers', [
       shape.lastNonMatches(),
       ["{} is an object, not an array","[] is an array, not an object"]
     );
-  }]
-]);
+  }
+});
 
-describe('handling optional attributes', [
-  ['oneOfType and undefined work together', t => {
+describe('handling optional attributes', {
+  oneOfTypeAndUndefinedWorkTogether: t => {
     const shape = new Shape({
       optionalNumber: oneOfType([number, undef]),
       mandatoryNumber: number,
@@ -270,11 +253,11 @@ describe('handling optional attributes', [
       shape.lastNonMatches(),
       ['null is a null, which is not among the specified types']
     );
-  }]
-]);
+  }
+});
 
-describe('printableShape', [
-  ['with object', t => {
+describe('printableShape', {
+  withObject: t => {
     const shape = new Shape({
       value: {
         anotherObject: {
@@ -305,9 +288,9 @@ describe('printableShape', [
         }
       }
     );
-  }],
+  },
 
-  ['with array', t => {
+  withArray: t => {
     const shape = new Shape([{
       value: {
         anotherObject: {
@@ -338,11 +321,11 @@ describe('printableShape', [
         }
       }]
     );
-  }],
-]);
+  },
+});
 
-describe('opt', [
-  ['declares a value to match a condition optionally', t => {
+describe('opt', {
+  declaresAValueToMatchAConditionOptionally: t => {
     const shape = new Shape({ someKey: opt(string) });
     t.true(
       shape.matches({ someKey: 'ImAString' })
@@ -356,5 +339,5 @@ describe('opt', [
     t.false(
       shape.matches({ someKey: number })
     );
-  }]
-]);
+  }
+});

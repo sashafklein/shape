@@ -12,7 +12,7 @@ Given a shape object (built using Shape's PropType like type functions), and som
 
 Passing case:
 
-```
+```js
 import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
 const shape = new Shape([{
   name: string,
@@ -33,7 +33,7 @@ shape.matches([{
 
 Failing case:
 
-```
+```js
 import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
 const shape = new Shape([{
   name: string,
@@ -56,7 +56,7 @@ shape.matches([{
 
 Shape also provides a simple API (to be improved) for seeing what failed in the match:
 
-```
+```js
 import Shape, { string, number, format, oneOf, oneOfType, regexes } from 'matches-shape';
 const shape = new Shape([{
   name: string,
@@ -97,7 +97,7 @@ The following matchers can be imported destructured from `matches-shape`.
 
 Apart from these matchers, object shape is indicated by the shape object itself. In other words, the following shape object will assert that the object tested contains, under a "values" key, an array of objects with string values for their "type" key:
 
-```
+```js
 import Shape, { string } from 'matches-shape';
 
 const shape = Shape.new({
@@ -107,7 +107,7 @@ const shape = Shape.new({
 
 One additional import is provided - `regexes` - which defines a handful of useful regex patterns for testing strings.
 
-```
+```js
 new Shape(format(regexes.iso8601)).matches('Some string')
 # => false
 ```
@@ -116,7 +116,7 @@ new Shape(format(regexes.iso8601)).matches('Some string')
 
 Sometimes you want to test that *if* an attribute exists, it is of a certain type -- but it doesn't need to exist. There are two options to achieve this. Either use the `opt(matcher)` function (ie `{ someKey: opt(string) }`, or use`oneOfType([])`, with `undef` as one of the options:
 
-```
+```js
 import Shape, { undef, number, oneOfType } from 'matches-shape';
 
 const shape  = new Shape({ optionalNumber: oneOfType([number, undef]) });
@@ -132,7 +132,7 @@ shape.matches({ optionalNumber: '1' }) // => false
 
 Shape objects come with a `printableShape` attribute, which returns a version of the given shape with the expected values represented as type strings:
 
-```
+```js
 const shape = new Shape([{
   value: {
     anotherObject: {
@@ -166,7 +166,7 @@ shape.printableShape
 
 To pretty print a `printableShape`, just use JSON.stringify:
 
-```
+```js
 // The third argument specifies how many spaces to indent per nesting level
 JSON.stringify(shape, null, 2);
 ```

@@ -13,22 +13,22 @@ Given a shape object (built using Shape's PropType like type functions), and som
 Passing case:
 
 ```
- * import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
- * const shape = new Shape([{
- *   name: string,
- *   age: number,
- *   birthDate: format(regexes.iso8601),
- *   friends: [string],
- *   gender: oneOf(['female', 'male'])
- * }]);
- * shape.matches([{
- *   name: 'John',
- *   age: 4,
- *   birthDate: '2012-04-03T06:25:18.234Z',
- *   friends: ['Sally', 'Bob'],
- *   gender: 'male'
- * }])
- * // => true // It checks out!
+import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
+const shape = new Shape([{
+  name: string,
+  age: number,
+  birthDate: format(regexes.iso8601),
+  friends: [string],
+  gender: oneOf(['female', 'male'])
+}]);
+shape.matches([{
+  name: 'John',
+  age: 4,
+  birthDate: '2012-04-03T06:25:18.234Z',
+  friends: ['Sally', 'Bob'],
+  gender: 'male'
+}])
+// => true // It checks out!
 ```
 
 Failing case:
@@ -57,26 +57,26 @@ Failing case:
 Shape also provides a simple API (to be improved) for seeing what failed in the match:
 
 ```
- * import Shape, { string, number, format, oneOf, oneOfType, regexes } from 'matches-shape';
- * const shape = new Shape([{
- *   name: string,
- *   age: number,
- *   birthDate: format(regexes.iso8601)
- *   friends: [string],
- *   gender: oneOf(['female', 'male']),
- *   random: oneOfType([number, string])
- * }]);
- * shape.matches([{
- *   name: 'John',
- *   age: 4,
- *   birthDate: '2012-04-03'
- *   friends: ['Sally', 5],
- *   gender: 'not-a-gender',
- *   random: {}
- * }])
- * // => false
- * shape.lastNonMatches();
- * // => ['"5" is a number, not a string', '"2012-04-03" does not match given regex', '"not-a-gender" is not within the specified array', '{} is an object, which is not among the specified types']
+import Shape, { string, number, format, oneOf, oneOfType, regexes } from 'matches-shape';
+const shape = new Shape([{
+  name: string,
+  age: number,
+  birthDate: format(regexes.iso8601)
+  friends: [string],
+  gender: oneOf(['female', 'male']),
+  random: oneOfType([number, string])
+}]);
+shape.matches([{
+  name: 'John',
+  age: 4,
+  birthDate: '2012-04-03'
+  friends: ['Sally', 5],
+  gender: 'not-a-gender',
+  random: {}
+}])
+// => false
+shape.lastNonMatches();
+// => ['"5" is a number, not a string', '"2012-04-03" does not match given regex', '"not-a-gender" is not within the specified array', '{} is an object, which is not among the specified types']
 ```
 
 ## Matching options
@@ -148,20 +148,20 @@ const shape = new Shape([{
 
 shape.printableShape
 // Returns the below object
-// [{
-//   "value": {
-//     "anotherObject": {
-//       "numberArray": [
-//         "number"
-//       ],
-//       "someValue": "string",
-//       "thisOneIsNull": "null",
-//       "thisOneIsUndefined": "undefined",
-//       "thisIsAFunction": "function",
-//       "thisIsFormatted": "format"
-//     }
-//   }
-// }]
+[{
+  "value": {
+    "anotherObject": {
+      "numberArray": [
+        "number"
+      ],
+      "someValue": "string",
+      "thisOneIsNull": "null",
+      "thisOneIsUndefined": "undefined",
+      "thisIsAFunction": "function",
+      "thisIsFormatted": "format"
+    }
+  }
+}]
 ```
 
 To pretty print a `printableShape`, just use JSON.stringify:

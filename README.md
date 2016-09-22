@@ -34,22 +34,22 @@ shape.matches([{
 Failing case:
 
 ```
- * import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
- * const shape = new Shape([{
- *   name: string,
- *   age: number,
- *   birthDate: format(regexes.iso8601),
- *   friends: [string],
- *   gender: oneOf(['female', 'male'])
- * }]);
- * shape.matches([{
- *   name: 'John',
- *   age: 4,
- *   birthDate: '2012-04-03T06:25:18.234Z',
- *   friends: ['Sally', 'Bob'],
- *   gender: 'not-a-gender'
- * }])
- * // => false // 'not-a-gender' is not among the acceptable gender options
+import Shape, { string, number, format, oneOf, regexes } from 'matches-shape';
+const shape = new Shape([{
+  name: string,
+  age: number,
+  birthDate: format(regexes.iso8601),
+  friends: [string],
+  gender: oneOf(['female', 'male'])
+}]);
+shape.matches([{
+  name: 'John',
+  age: 4,
+  birthDate: '2012-04-03T06:25:18.234Z',
+  friends: ['Sally', 'Bob'],
+  gender: 'not-a-gender'
+}])
+// => false // 'not-a-gender' is not among the acceptable gender options
 ```
 
 ## Last Non Matches

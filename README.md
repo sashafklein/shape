@@ -49,7 +49,7 @@ shape.matches([{
   friends: ['Sally', 'Bob'],
   gender: 'not-a-gender'
 }])
-// => false // 'not-a-gender' is not among the acceptable gender options
+// => false // Expected value at gender to be one of 'female' or 'male', but found 'not-a-gender'.
 ```
 
 ## Last Non Matches
@@ -76,7 +76,7 @@ shape.matches([{
 }])
 // => false
 shape.lastNonMatches();
-// => ['"5" is a number, not a string', '"2012-04-03" does not match given regex', '"not-a-gender" is not within the specified array', '{} is an object, which is not among the specified types']
+// => ['Expected value at friends[1] to be a string, but found 5 (number).', 'Expected value at birthDate to be a string matching the given regex, but found "2012-04-03" (string)', 'Expected value at gender to be within the given array, but found "not-a-gender" (string)', 'Expected value at random to be one of the specified types, but found {} (object).']
 ```
 
 ## Matching options
@@ -173,5 +173,6 @@ JSON.stringify(shape, null, 2);
 
 ### TODO
 
-- Improve error logging, so that errors point to particular nodes
-- Add a handful of basic regexes
+- [X] Improve error logging, so that errors point to particular nodes.
+- [X] Add a handful of basic regexes
+- [ ] Improve printableShape, so it (and errors) handle oneOf and oneOfType completely.

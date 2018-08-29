@@ -15,7 +15,8 @@
   "scripts": {
     "test": "ava test --verbose",
     "prepublish": "npm run build",
-    "build": "babel --presets es2015 -d lib/ src/"
+    "build": "babel --presets es2015 -d lib/ src/",
+    "lint": "eslint ."
   },
   "ava": {
     "files": [
@@ -34,6 +35,7 @@
   },
   "devDependencies": {
     "ava": "^0.23.0",
-    "ava-describe": "2.0.0"
+    "ava-describe": "2.0.0",
+    "babel-eslint": "^9.0.0"
   }
 }

@@ -59,7 +59,7 @@ const testFlat = (matcher, good, bad) => t => {
   const shape = new Shape(matcher);
   t.true(shape.matches(good));
   t.false(shape.matches(bad));
-}
+};
 
 describe('non-object shape', {
   simpleStrings: testFlat(string, 'I am a string', 4),
@@ -78,11 +78,11 @@ describe('object shape', {
 
     accurateNegatives: t => {
       t.false(flatAsserter.matches(flatObj({ name: 5 })));
-      assertFailures(t, flatAsserter, ['5 is a number, not a string']);
+      assertFailures(t, flatAsserter, ['Expected value at name to be a string, but found 5 (number).']);
       t.false(flatAsserter.matches(flatObj({ age: 'Five' })));
-      assertFailures(t, flatAsserter, ['"Five" is a string, not a number']);
+      assertFailures(t, flatAsserter, ['Expected value at age to be a number, but found "Five" (string).']);
       t.false(flatAsserter.matches(flatObj({ incrementAge: 'Another string' })));
-      assertFailures(t, flatAsserter, ['"Another string" is a string, not a function']);
+      assertFailures(t, flatAsserter, ['Expected value at incrementAge to be a function, but found "Another string" (string).']);
     },
 
     withOneOfSpecified: t => {
@@ -93,7 +93,7 @@ describe('object shape', {
       t.true(asserter.matches({ eyeColor: 'blue' }));
       t.true(asserter.matches({ eyeColor: 'green' }));
       t.false(asserter.matches({ eyeColor: 'purple' }));
-      assertFailures(t, asserter, ['"purple" is not within the specified array']);
+      assertFailures(t, asserter, ['Expected value at eyeColor to be within the given array, but found "purple" (string).']);
     },
 
     withFormatSpecified: t => {
@@ -103,7 +103,7 @@ describe('object shape', {
 
       t.true(asserter.matches({ email: 'fake@email.com' }));
       t.false(asserter.matches({ email: 'fakeemail.com' }));
-      assertFailures(t, asserter, ['"fakeemail.com" does not match given regex']);
+      assertFailures(t, asserter, ['Expected value at email to be a string matching the given regex, but found "fakeemail.com" (string).']);
     },
 
     withOneOfTypeSpecified: t => {
@@ -114,9 +114,9 @@ describe('object shape', {
       t.true(asserter.matches({ random: 'I am a string' }));
       t.true(asserter.matches({ random: 1234.1234 }));
       t.false(asserter.matches({ random: [] }));
-      assertFailures(t, asserter, ['[] is an array, which is not among the specified types']);
+      assertFailures(t, asserter, ['Expected value at random to be one of the specified types, but found [] (array).']);
       t.false(asserter.matches({ random: {} }));
-      assertFailures(t, asserter, ['{} is an object, which is not among the specified types']);
+      assertFailures(t, asserter, ['Expected value at random to be one of the specified types, but found {} (object).']);
     },
   },
 
@@ -129,11 +129,11 @@ describe('object shape', {
 
     accurateNegatives: t => {
       t.false(deepObjectAsserter.matches(deepObj({ name: 5 })));
-      assertFailures(t, deepObjectAsserter, ['5 is a number, not a string']);
+      assertFailures(t, deepObjectAsserter, ["Expected value at name to be a string, but found 5 (number)."]);
       t.false(deepObjectAsserter.matches(deepObj({ friends: 'Sally' })));
-      assertFailures(t, deepObjectAsserter, ['"Sally" is a string, not an array']);
+      assertFailures(t, deepObjectAsserter, ['Expected value at friends to be an array, but found "Sally" (string).']);
       t.false(deepObjectAsserter.matches(deepObj({ details: { eyeColor: 'brown' } }))); // Missing height
-      assertFailures(t, deepObjectAsserter, ['undefined is an undefined, not a string']);
+      assertFailures(t, deepObjectAsserter, ['Expected value at details[\'height\'] to be a string, but found undefined (undefined).']);
     },
 
     withOneOfSpecified: t => {
@@ -142,7 +142,7 @@ describe('object shape', {
       });
       t.true(asserter.matches({ details: { eyeColor: 'blue' } }));
       t.false(asserter.matches({ details: { eyeColor: 'purple' } }));
-      assertFailures(t, asserter, ['"purple" is not within the specified array']);
+      assertFailures(t, asserter, ['Expected value at details[\'eyeColor\'] to be within the given array, but found "purple" (string).']);
     }
   }
 });
@@ -161,7 +161,7 @@ describe('array', {
     withoutChildren: t => {
       t.true(arrayAsserter.matches([]));
       t.false(arrayAsserter.matches({}));
-      assertFailures(t, arrayAsserter, ['{} is an object, not an array']);
+      assertFailures(t, arrayAsserter, ['Expected value to be an array, but found {} (object).']);
     },
 
     withIsoFormatData: t => {
@@ -180,7 +180,7 @@ describe('array', {
       t.true(asserter.matches(data));
       data[0] = Object.assign({}, data[0], { endTime: '2016-07-09' });
       t.false(asserter.matches(data));
-      assertFailures(t, asserter, ['"2016-07-09" does not match given regex']);
+      assertFailures(t, asserter, ['Expected value at 0[\'endTime\'] to be a string matching the given regex, but found "2016-07-09" (string).']);
     }
   }
 });
@@ -203,7 +203,10 @@ describe('readme example', {
     }]));
     t.deepEqual(
       shape.lastNonMatches(),
-      ['4 is a number, not a string', '"not-a-gender" is not within the specified array']
+      [
+        'Expected value at 0[\'friends\'][1] to be a string, but found 4 (number).',
+        'Expected value at 0[\'gender\'] to be within the given array, but found "not-a-gender" (string).'
+      ]
     );
   }
 });
@@ -220,7 +223,7 @@ describe('array and object matchers', {
     t.false(shape.matches({ arrayVal: {}, objectVal: [] }));
     t.deepEqual(
       shape.lastNonMatches(),
-      ["{} is an object, not an array","[] is an array, not an object"]
+      ['Expected value at arrayVal to be an array, but found {} (object).', 'Expected value at objectVal to be an object, but found [] (array).']
     );
   }
 });
@@ -236,22 +239,25 @@ describe('handling optional attributes', {
     t.true(shape.matches({ optionalNumber: 1, mandatoryNumber: 1, nullButNotUndefinedField: null }));
     t.true(shape.matches({ mandatoryNumber: 1, nullButNotUndefinedField: null }));
 
-    t.false(shape.matches({ nullButNotUndefinedField: null }));
+    t.false(shape.matches({ nullButNotUndefinedField: undefined }));
     t.deepEqual(
       shape.lastNonMatches(),
-      ['undefined is an undefined, not a number']
+      [
+        'Expected value at mandatoryNumber to be a number, but found undefined (undefined).',
+        'Expected value at nullButNotUndefinedField to be null, but found undefined (undefined).'
+      ]
     );
 
     t.false(shape.matches({ mandatoryNumber: 1 }));
     t.deepEqual(
       shape.lastNonMatches(),
-      ['undefined is an undefined, not a null']
+      ['Expected value at nullButNotUndefinedField to be null, but found undefined (undefined).']
     );
 
     t.false(shape.matches({ optionalNumber: null, mandatoryNumber: 1, nullButNotUndefinedField: null }));
     t.deepEqual(
       shape.lastNonMatches(),
-      ['null is a null, which is not among the specified types']
+      ['Expected value at optionalNumber to be one of the specified types, but found null (null).']
     );
   }
 });

@@ -100,7 +100,7 @@ Apart from these matchers, object shape is indicated by the shape object itself.
 ```js
 import Shape, { string } from 'matches-shape';
 
-const shape = Shape.new({
+const shape = new Shape({
     values: [{ type: string }]
 });
 ```
